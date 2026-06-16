@@ -1,0 +1,8 @@
+# Client data — real Swedish bookkeeping PII (client roster, org numbers, plate
+# ledger, per-client manuals). Kept local only (and in ~/Backups/claude-bokforing);
+# NEVER pushed to GitHub.
+references/
+skills/*/references/
+
+# macOS / editor cruft
+.DS_Store
