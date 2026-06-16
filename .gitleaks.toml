@@ -1,0 +1,31 @@
+# gitleaks config for the bokforing plugin (PUBLIC repo).
+# Catches the two things that would actually hurt if pushed:
+#   (1) credentials/tokens (gitleaks defaults), and
+#   (2) Swedish client PII *shapes* (personnummer, org-nr).
+# Client NAMES are deliberately NOT here (this file is public). The local
+# pre-commit hook (.githooks/pre-commit) carries the name denylist, kept off GitHub.
+
+title = "bokforing secret + PII scan"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "swedish-personnummer"
+description = "Swedish personnummer (YYYYMMDD-NNNN / YYMMDD-NNNN, - or +)"
+regex = '''(?:19|20)?\d{6}[-+]\d{4}'''
+tags = ["pii", "sweden"]
+
+[[rules]]
+id = "swedish-orgnr"
+description = "Swedish organisationsnummer (NNNNNN-NNNN)"
+regex = '''\b\d{6}-\d{4}\b'''
+tags = ["pii", "sweden"]
+
+[allowlist]
+description = "Ignore the scanner's own config/hook files (they contain the patterns by design)"
+paths = [
+  '''\.gitleaks\.toml''',
+  '''\.githooks/.*''',
+  '''\.github/.*''',
+]

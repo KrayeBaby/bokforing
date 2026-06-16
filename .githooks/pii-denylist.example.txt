@@ -1,0 +1,8 @@
+# LOCAL ONLY. Copy this file to .githooks/pii-denylist.txt and add real client
+# surnames / company names, ONE PER LINE. pii-denylist.txt is git-ignored and
+# must never be committed. Blank lines and lines starting with # are ignored.
+# Matching is case-insensitive, fixed-string.
+#
+# Example (replace with your own):
+# Efternamn
+# Något Företag AB

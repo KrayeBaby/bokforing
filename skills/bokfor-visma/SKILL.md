@@ -24,8 +24,9 @@ backup and may lag by a revision). Every write is **dry-run → review → gated
   The `python3` on PATH is **3.9 and will crash** — run it with your **Python 3.11**.
 - **Deps:** standard library only (raw `urllib`); nothing to `pip install`.
 - **Creds:** loaded from `~/.hermes/spiris/sandbox.env` (`SPIRIS_CLIENT_ID/SECRET/REDIRECT_URI`).
-  `assert_sandbox()` raises unless the env file is `sandbox.env` — the engine is
-  **sandbox-only by construction today**. There is no `prod.env`/`--prod` path yet.
+  `assert_env()` allows **sandbox** (`sandbox.env`) by default; the gated **`--prod`**
+  path is **built but inert** — it needs `--prod` + `prod.env` + a deliberate
+  `~/.hermes/spiris/.prod-approved` token, else it STOPs cleanly.
 
 ## The safe posting workflow
 
@@ -42,13 +43,13 @@ across the `*_posted_*.jsonl` logs).
 2. **Review the plan** — read the generated `~/.hermes/spiris/harness/review_batch_*.md`.
    Run the `bokforing-granskare` subagent on it for an adversarial first pass, then
    you give the human OK. **Nothing posts before this.** (The safety hook blocks
-   `--apply` if no review artifact exists.)
+   `--apply` if no review artifact exists, or if the newest one is stale.)
 3. **Apply** (gated, sandbox) — posts READY vouchers, each read-back-verified:
    ```
    python3.11 ~/.hermes/spiris/write/batch_voucher_poster.py --docs <docs.json> --apply
    ```
    Useful flags: `--verify-facit` (byte-exact read-back vs the facit CSV — this is
-   the 842/842 proof), `--samples N`, `--limit N`, `--sleep F`, `--no-preflight`.
+   the full-coverage proof), `--samples N`, `--limit N`, `--sleep F`, `--no-preflight`.
 
 ## What maps to what (4 flows)
 
@@ -95,7 +96,7 @@ accounts; *create* truly-missing ones; *remap* only with the bookkeeper's decisi
 
 Build + sandbox validation are **done**. Per tenant the remaining gated sequence is:
 1. **(You)** obtain Spiris/Visma **production** OAuth app → `prod.env`, client authorizes.
-2. The gated **`--prod`** code path (see plugin task — scaffolded inert until creds exist).
+2. The gated **`--prod`** code path is **built + inert** (triple-gated: `--prod` + `prod.env` + `.prod-approved`); it activates once prod creds exist.
 3. Refresh the client's **real** prod chart, re-run the diff (prod chart ≠ sandbox chart).
 4. Create/activate whatever's missing (gated write, your OK).
 5. Re-verify byte-exact vs the **prod-resolved** VAT GUIDs, then dry-run → smoke 3 →

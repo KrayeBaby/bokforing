@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# bokforing local pre-commit guard — defense in depth on top of .gitignore.
+# Blocks committing (1) known-sensitive paths, (2) Swedish PII shapes, and
+# (3) any string from an optional LOCAL client-name denylist.
+#
+# Activate once per clone:   git config core.hooksPath .githooks
+# Real names live ONLY in .githooks/pii-denylist.txt (git-ignored). Copy
+# pii-denylist.example.txt -> pii-denylist.txt and fill it in.
+set -euo pipefail
+
+staged="$(git diff --cached --name-only --diff-filter=ACM || true)"
+[ -z "$staged" ] && exit 0
+
+fail=0
+pii_re='\b(19|20)?[0-9]{6}[-+][0-9]{4}\b'
+denylist=".githooks/pii-denylist.txt"
+tmpdeny=""
+if [ -f "$denylist" ]; then
+  tmpdeny="$(mktemp)"
+  grep -vE '^[[:space:]]*(#|$)' "$denylist" > "$tmpdeny" 2>/dev/null || true
+  [ -s "$tmpdeny" ] || { rm -f "$tmpdeny"; tmpdeny=""; }
+fi
+
+while IFS= read -r f; do
+  [ -n "$f" ] || continue
+  case "$f" in
+    references/*|*/references/*|memory/*|*.env|*.token-cache.json|*tenant-cache.json*|*_posted_*.jsonl|posted-vouchers.jsonl|accounts-created.jsonl|facit_*.csv|*.prod-approved)
+      echo "BLOCKED (sensitive path): $f"; fail=1; continue;;
+  esac
+  case "$f" in .gitleaks.toml|.githooks/*|.github/*) continue;; esac
+  content="$(git show ":$f" 2>/dev/null || true)"
+  if printf '%s' "$content" | grep -nE "$pii_re" >/dev/null 2>&1; then
+    echo "BLOCKED (personnummer/orgnr shape): $f"; fail=1
+  fi
+  if [ -n "$tmpdeny" ] && printf '%s' "$content" | grep -iFf "$tmpdeny" >/dev/null 2>&1; then
+    echo "BLOCKED (client name from local denylist): $f"; fail=1
+  fi
+done <<< "$staged"
+
+[ -n "$tmpdeny" ] && rm -f "$tmpdeny"
+
+if [ "$fail" -ne 0 ]; then
+  echo ""
+  echo "Commit aborted by .githooks/pre-commit. Move the file out of the commit,"
+  echo "or (only if you are certain it's a false positive) re-run with --no-verify."
+  exit 1
+fi
+exit 0

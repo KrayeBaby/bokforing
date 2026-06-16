@@ -6,3 +6,11 @@ skills/*/references/
 
 # macOS / editor cruft
 .DS_Store
+
+# Local-only PII denylist used by .githooks/pre-commit (real client names) —
+# never pushed. pii-denylist.example.txt (committed) documents the format.
+.githooks/pii-denylist.txt
+
+# Python bytecode
+__pycache__/
+*.pyc
