@@ -21,12 +21,17 @@ backup and may lag by a revision). Every write is **dry-run → review → gated
 ## Runtime (read first)
 
 - **Interpreter:** the engine uses 3.10+ syntax (`str | Path`, `dict[str, Any]`).
-  The `python3` on PATH is **3.9 and will crash** — run it with your **Python 3.11**.
+  The **bare system** `python3` (`/usr/bin/python3`) is **3.9 and will crash** on it. A
+  login shell resolves `python3` to Homebrew **3.14.5** (works); `python3.11`/`python3.12`
+  are also installed. Run the engine with any **Python ≥3.10**. (The safety hook itself is
+  3.9-safe, so it guards correctly under either interpreter.)
 - **Deps:** standard library only (raw `urllib`); nothing to `pip install`.
 - **Creds:** loaded from `~/.hermes/spiris/sandbox.env` (`SPIRIS_CLIENT_ID/SECRET/REDIRECT_URI`).
   `assert_env()` allows **sandbox** (`sandbox.env`) by default; the gated **`--prod`**
-  path is **built but inert** — it needs `--prod` + `prod.env` + a deliberate
-  `~/.hermes/spiris/.prod-approved` token, else it STOPs cleanly.
+  path is **LIVE since 2026-06-23** (`prod.env` + `~/.hermes/spiris/.prod-approved` are
+  present; first prod verifikat posted to the first live tenant). Every prod write is still
+  triple-gated — `--prod` + `prod.env` + the `.prod-approved` token, plus the safety hook's
+  fresh-review + sha256 batch-binding — else it STOPs cleanly.
 
 ## The safe posting workflow
 
@@ -92,11 +97,12 @@ python3.11 ~/.hermes/spiris/write/accounts_verify_refresh.py        # read-back 
 `POST /v2/accounts` auto-propagates to all fiscal years (proven). Activate inactive
 accounts; *create* truly-missing ones; *remap* only with the bookkeeper's decision.
 
-## Go-live for a tenant (currently blocked on Spiris prod access)
+## Go-live for a tenant (Spiris prod access GRANTED 2026-06-21; first tenant live 2026-06-23)
 
-Build + sandbox validation are **done**. Per tenant the remaining gated sequence is:
-1. **(You)** obtain Spiris/Visma **production** OAuth app → `prod.env`, client authorizes.
-2. The gated **`--prod`** code path is **built + inert** (triple-gated: `--prod` + `prod.env` + `.prod-approved`); it activates once prod creds exist.
+Build + sandbox validation are **done**, and prod is **active** for the first live tenant.
+Per *new* tenant the gated sequence is:
+1. **(You)** obtain Spiris/Visma **production** OAuth app → `prod.env`, client authorizes. *(Done for the first tenant.)*
+2. The gated **`--prod`** code path is **live** (triple-gated: `--prod` + `prod.env` + `.prod-approved`); it is active for any tenant once that tenant's prod creds + token exist.
 3. Refresh the client's **real** prod chart, re-run the diff (prod chart ≠ sandbox chart).
 4. Create/activate whatever's missing (gated write, your OK).
 5. Re-verify byte-exact vs the **prod-resolved** VAT GUIDs, then dry-run → smoke 3 →

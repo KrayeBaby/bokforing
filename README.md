@@ -27,8 +27,9 @@ if you want versioned distribution.
 
 - **Client data stays local.** `references/` and `skills/*/references/` hold real client PII (roster, org numbers, plate ledger, per-client manuals); they are git-ignored and live only on this machine + `~/Backups/claude-bokforing` — never pushed to GitHub.
 - **Secret/PII scanning.** A `secret-scan` GitHub Action (pinned gitleaks) runs on every push/PR — secrets plus Swedish personnummer/org-nr shapes, and a job that fails if any sensitive path gets tracked. Activate the matching local guard once per clone: `git config core.hooksPath .githooks`, then `cp .githooks/pii-denylist.example.txt .githooks/pii-denylist.txt` and add client names (that file is git-ignored).
-- Engine needs **Python ≥3.10**; run it with your **Python 3.11** (the system `python3` is 3.9 and crashes on the 3.10+ syntax).
+- Engine needs **Python ≥3.10**; a login shell's `python3` is Homebrew **3.14.5** (works), while the bare system `python3` (`/usr/bin/python3`) is 3.9 and crashes on the 3.10+ syntax. The guard hook is 3.9-safe, so it runs under either.
 - For *posting*, the client's real accounts are truth (`4616`, `6992`); the `56xx` in the
   sorting docs are standard-BAS expectation. `VISMA_MAPPNING` wins for the ledger.
-- Production is gated: create `~/.hermes/spiris/.prod-approved` deliberately, once
-  Spiris prod is authorized, to let the guard pass a `--prod` run.
+- Production is **live** (Spiris prod authorized 2026-06-21; first tenant live 2026-06-23).
+  The `~/.hermes/spiris/.prod-approved` token is present; the guard still requires it **plus**
+  a fresh reviewed dry-run (sha256-bound) for every `--prod` run.
