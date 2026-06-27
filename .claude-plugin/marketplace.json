@@ -1,0 +1,16 @@
+{
+  "name": "bokforing-local",
+  "owner": {
+    "name": "Kraye"
+  },
+  "metadata": {
+    "description": "Local single-plugin marketplace that registers the bokforing plugin from this repo."
+  },
+  "plugins": [
+    {
+      "name": "bokforing",
+      "source": ".",
+      "description": "Swedish bokföring automation for the Företaget clients: safe document sorting/filing and Visma eAccounting (eEkonomi) voucher posting via the Spiris API, with a review-gate subagent and an --apply/prod safety hook."
+    }
+  ]
+}

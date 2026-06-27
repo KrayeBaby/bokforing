@@ -1,6 +1,6 @@
 {
   "name": "bokforing",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Swedish bokföring automation for the Företaget clients: safe document sorting/filing and Visma eAccounting (eEkonomi) voucher posting via the Spiris API, with a review-gate subagent and an --apply/prod safety hook.",
   "author": {
     "name": "Kraye"
