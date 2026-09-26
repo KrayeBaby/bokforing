@@ -8,7 +8,7 @@
   },
   "plugins": [
     {
-      "name": "bokforing",
+      "name": "bokforing-visma",
       "source": ".",
       "description": "Swedish bokföring automation for the Företaget clients: safe document sorting/filing and Visma eAccounting (eEkonomi) voucher posting via the Spiris API, with a review-gate subagent and an --apply/prod safety hook."
     }

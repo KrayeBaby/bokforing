@@ -25,14 +25,14 @@ symlinks or hand-edited `settings.json` entries.
 ```bash
 # from a local clone
 claude plugin marketplace add /path/to/bokforing
-claude plugin install bokforing@bokforing-local
+claude plugin install bokforing-visma@bokforing-local
 ```
 
-Verify with `claude plugin list` (shows `bokforing@bokforing-local … ✔ enabled`) and
-`claude plugin details bokforing@bokforing-local` (lists the skill, the review-gate
+Verify with `claude plugin list` (shows `bokforing-visma@bokforing-local … ✔ enabled`) and
+`claude plugin details bokforing-visma@bokforing-local` (lists the skill, the review-gate
 agent, and the PreToolUse hook). Plugin components load at session start, so restart
 Claude Code after enabling; after changing the source, run
-`claude plugin update bokforing@bokforing-local` to refresh the installed copy.
+`claude plugin update bokforing-visma@bokforing-local` to refresh the installed copy.
 
 ## Notes
 
