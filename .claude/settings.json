@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch *)",
+      "Bash(git show *)",
+      "Bash(git ls-tree *)",
+      "Bash(git worktree add *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(du *)",
+      "Bash(wc *)",
+      "Bash(file *)",
+      "Bash(head *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(sort *)",
+      "Bash(sha256sum *)",
+      "Bash(cmp *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(sed *)",
+      "Bash(jq *)",
+      "Bash(ffprobe *)",
+      "Bash(ffmpeg *)",
+      "Bash(exiftool *)"
+    ],
+    "ask": [
+      "Bash(find * -delete*)",
+      "Bash(find * -exec*)",
+      "Bash(find * -ok*)",
+      "Bash(sed -i*)",
+      "Bash(sed * -i*)",
+      "Bash(sed *--in-place*)",
+      "Bash(ffmpeg -y*)",
+      "Bash(ffmpeg * -y*)",
+      "Bash(exiftool *-overwrite_original*)",
+      "Bash(exiftool *-delete_original*)"
+    ]
+  }
+}
