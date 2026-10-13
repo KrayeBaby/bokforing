@@ -12,6 +12,7 @@
       "Bash(ffprobe *)",
       "Bash(file *)",
       "Bash(find *)",
+      "Bash(git -C *)",
       "Bash(git add *)",
       "Bash(git check-ignore *)",
       "Bash(git checkout -b *)",
@@ -45,24 +46,31 @@
       "Bash(wc *)",
       "Bash(xxd *)"
     ],
-    "ask": [
-      "Bash(find * -delete*)",
-      "Bash(find * -exec*)",
-      "Bash(find * -ok*)",
-      "Bash(sed -i*)",
-      "Bash(sed * -i*)",
-      "Bash(sed *--in-place*)",
-      "Bash(ffmpeg -y*)",
-      "Bash(ffmpeg * -y*)",
-      "Bash(exiftool *-overwrite_original*)",
-      "Bash(exiftool *-delete_original*)"
-    ],
     "deny": [
+      "Bash(git -C * clean *)",
+      "Bash(git -C * push * -f*)",
+      "Bash(git -C * push *--force*)",
+      "Bash(git -C * push -f*)",
+      "Bash(git -C * reset --hard*)",
       "Bash(git clean *)",
       "Bash(git push * -f*)",
       "Bash(git push *--force*)",
       "Bash(git push -f*)",
       "Bash(git reset --hard*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if command -v python3 >/dev/null 2>&1; then exec python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.py\"; fi",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }
