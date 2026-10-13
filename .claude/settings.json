@@ -1,6 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "Bash(awk *)",
+      "Bash(bash *)",
       "Bash(cat *)",
       "Bash(cmp *)",
       "Bash(cp *)",
@@ -32,6 +34,7 @@
       "Bash(pdfinfo *)",
       "Bash(pdftoppm *)",
       "Bash(pdftotext *)",
+      "Bash(python3 *)",
       "Bash(sed *)",
       "Bash(sha256sum *)",
       "Bash(shasum *)",
@@ -53,6 +56,13 @@
       "Bash(ffmpeg * -y*)",
       "Bash(exiftool *-overwrite_original*)",
       "Bash(exiftool *-delete_original*)"
+    ],
+    "deny": [
+      "Bash(git clean *)",
+      "Bash(git push * -f*)",
+      "Bash(git push *--force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)"
     ]
   }
 }
